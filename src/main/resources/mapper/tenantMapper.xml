@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saascrm.mapper.tenantMapper">
+
+    <resultMap id="BaseResultMap" type="com.saascrm.pojo.entity.tenant">
+        <id column="id" property="id"/>
+        <result column="tenant_name" property="tenantName"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, tenant_name, password, status, created_by, updated_by, created_at, updated_at, is_deleted
+    </sql>
+
+    <insert id="insert" parameterType="com.saascrm.pojo.entity.tenant">
+        INSERT INTO sys_tenant (<include refid="Base_Column_List"/>)
+        VALUES (#{id}, #{tenantName}, #{password}, #{status}, #{createdBy}, #{updatedBy}, #{createdAt}, #{updatedAt}, #{isDeleted})
+    </insert>
+
+    <update id="update" parameterType="com.saascrm.pojo.entity.tenant">
+        UPDATE sys_tenant
+        SET tenant_name = #{tenantName},
+            password = #{password},
+            status = #{status},
+            updated_by = #{updatedBy}
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_tenant
+        WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_tenant
+        WHERE tenant_name = #{tenantName} AND is_deleted = 0
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_tenant
+        WHERE is_deleted = 0
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="softDelete">
+        UPDATE sys_tenant
+        SET is_deleted = 1, updated_at = NOW()
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+</mapper>

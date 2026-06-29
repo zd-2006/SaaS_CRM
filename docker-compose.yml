@@ -1,20 +1,24 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: saas-crm-mysql
+  postgres:
+    image: postgres:16-alpine
+    container_name: saas-crm-postgres
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: saas_crm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: saas_crm
       TZ: Asia/Shanghai
     ports:
-      - "3308:3306"
+      - "5433:5432"
     volumes:
-      - mysql-data:/var/lib/mysql
-      - ./init:/docker-entrypoint-initdb.d
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
+      - postgres-data:/var/lib/postgresql/data
+      - ./init/postgres:/docker-entrypoint-initdb.d
+
+  redis:
+    image: redis:7-alpine
+    container_name: saas-crm-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
 
 volumes:
-  mysql-data:
+  postgres-data:
