@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: dev
+
+server:
+  port: 8098
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.saascrm.pojo.entity
+  configuration:
+    map-underscore-to-camel-case: true
